@@ -45,6 +45,7 @@
 //These parameters should be defined by user to reflect the network setup:
 #define SERVER_ADDRESS "192.168.1.12"                           //Address of machine on which the neuronav platform runs
 #define VIDEO_SENDER_PORT 18951                                 //UDP port to send video to
+#define IMAGE_SENDER_PORT 18952                                 //TCP port to send image to
 
 #define COMMANDS_SENDER_PORT 18947                              //UDP port to send commands to
 #define VIDEO_RECEIVER_PORT 18946                               //UDP port to receive video from

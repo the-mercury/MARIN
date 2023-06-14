@@ -19,6 +19,8 @@ Sender::Sender( QObject *parent, int w, int h, QString thisaddress, int frw, int
     this->thisaddress = thisaddress;
     udpVideoServerSocket->SetIPAddress( thisaddress.toStdString().c_str() );
     udpVideoServerSocket->SetPortNumber( port_video );
+//    tcpImageServerSocket->SetIPAddress( thisaddress.toStdString().c_str() );
+//    tcpImageServerSocket->SetPortNumber( port_image );
     udpCommandsServerSocket->SetIPAddress( thisaddress.toStdString().c_str() );
     udpCommandsServerSocket->SetPortNumber( port_commands );
 //    h264StreamEncoder = new H264Encoder( OH264_CONFIG_FILE_PATH );
@@ -142,13 +144,16 @@ void Sender::copy_frame(QVideoFrame frame){
 //////////////////////////////////////////////   SEND   ////////////////////////////////////////////////
 bool Sender::send(){
     //try to connect if not already:
-    if ( !connected_video ){
+    if ( !connected_video && !isImage ){
         connectVideo();
+    }
+    if ( !connected_image && isImage ){
+        connectImage();
     }
     if ( !connected_commands ){
         connectCommands();
     }
-    if( (!connected_commands && !connected_video) || !init_done ){
+    if( (!connected_commands && (!connected_video || !connected_image) ) || !init_done ){
         return false;
     }
     //if there is a command to send we do this first:
@@ -257,6 +262,37 @@ bool Sender::send(){
         std::cout << "SEND!" << std::endl;
         delete [] frame;
     }
+    else if (m_sendingImage){
+        if ( tcpImageServerSocket->GetConnected() ) {
+            // size parameters
+            int   size[]     = {100, 100, 1};                   // image dimension
+            float spacing[]  = {1.0, 1.0, 5.0};                 // spacing (mm/pixel)
+            int   subVolSize[]   = {100, 100, 1};               // sub-volume size
+            int   subVolOffset[] = {0, 0, 0};                   // sub-volume offset
+            int   scalarType = igtl::ImageMessage::TYPE_UINT8;  // scalar type
+            
+            imageMessage = igtl::ImageMessage::New();
+            imageMessage->SetDimensions(size);
+            imageMessage->SetSpacing(spacing);
+            imageMessage->SetScalarType(scalarType);
+            imageMessage->SetDeviceName(THIS_DEVICE_NAME);
+            imageMessage->SetSubVolume(subVolSize, subVolOffset);
+            imageMessage->AllocateScalars();
+            
+            imageMessage->SetHeaderVersion( IGTL_HEADER_VERSION_2 );
+            //        imageMessage->SetCodecType( IGTL_VIDEO_CODEC_NAME_H264 );
+            
+            //set timestamp:
+            ServerTimer->GetTime();
+            imageMessage->SetTimeStamp(ServerTimer);
+            
+            uchar * frame = new uchar[ imageMessage->GetPackSize() ];
+            memcpy( frame, imageMessage->GetPackPointer(), imageMessage->GetPackSize() );
+            //        rtpWrapper->WrapMessageAndSend( tcpImageServerSocket, frame, imageMessage->GetPackSize() );
+            std::cout << "SEND!" << std::endl;
+            delete [] frame;
+        }
+    }
     return true;
 }
 
@@ -281,6 +317,27 @@ bool Sender::connectVideo(){
     }
     return connected_video;
 }
+
+bool Sender::connectImage(){
+    if( !connected_image ){
+        //create TCP socket for image:
+        int s = tcpImageServerSocket->CreateServer( port_image );
+        if ( s < 0 ){
+            std::cerr << "[Sender] Could not create a server socket for image (TCP)." << std::endl;
+            connected_image = false;
+        } else {
+//            int clientID = tcpImageServerSocket->ConnectToServer( hostname.toStdString().c_str(), port_image, 0 );
+//            std::cout << "[Sender] added client: " << clientID << std::endl;
+//            connected_image = clientID >= 0;
+            std::cout << "[Sender] Created a server socket. (TCP for image)" << std::endl;
+            socket->SetTimeout(3000);
+        }
+    } else {
+        qWarning() << "[Sender] Already connected to send image. Nothing to do.";
+    }
+    return connected_image;
+}
+
 bool Sender::connectCommands(){
     if( !connected_commands ){
         //create UDP socket for commands:

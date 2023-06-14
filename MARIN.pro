@@ -42,16 +42,27 @@ QMAKE_BUNDLE_DATA += deployment
 QMAKE_INFO_PLIST = Info.plist
 
 INCLUDEPATH += \
-    /PathToOpenIGTLink/Source \
-    /PathToOpenIGTLink/Source/VideoStreaming \
-    /PathToOpenIGTLink/Source/igtlutil \
-    /PathToOpenIGTLinkBuild \
-    /PathToOpenIGTLinkBuild/lib/Debug \
-    /PathToOpenIGTLinkBuild/Deps/openh264 \
-    /PathToOpenIGTLinkBuild/Deps/openh264/codec \
-    /PathToOpenIGTLinkBuild/Deps/openh264/codec/api/svc \
-    /PathToLibyuv/src/include \
-    /PathToLibyuv/src/include/libyuv
+    /Volumes/mercury+/OpenIGTLink/OpenIGTLink/Source \
+    /Volumes/mercury+/OpenIGTLink/OpenIGTLink/Source/VideoStreaming \
+    /Volumes/mercury+/OpenIGTLink/OpenIGTLink/Source/igtlutil \
+    /Volumes/mercury+/OpenIGTLink/OpenIGTLink_build \
+    /Volumes/mercury+/OpenIGTLink/OpenIGTLink_build/lib/Debug \
+    /Volumes/mercury+/OpenH264/openh264 \
+    /Volumes/mercury+/OpenH264/openh264/codec \
+    /Volumes/mercury+/OpenH264/openh264/codec/api/wels \
+    /Volumes/mercury+/chromium/working_dir/src/include \
+    /Volumes/mercury+/chromium/working_dir/src/include/libyuv
+
+    #/Users/mercury/OpenIGTLink/OpenIGTLink/Source \
+    #/Users/mercury/OpenIGTLink/OpenIGTLink/Source/VideoStreaming \
+    #/Users/mercury/OpenIGTLink/OpenIGTLink/Source/igtlutil \
+    #/Users/mercury/OpenIGTLink/OpenIGTLink_build \
+    #/Users/mercury/OpenIGTLink/OpenIGTLink_build/lib/Debug \
+    #/Users/mercury/OpenH264/openh264 \
+    #/Users/mercury/OpenH264/openh264/codec \
+    #/Users/mercury/OpenH264/openh264/codec/api/wels \
+    #/Users/mercury/chromium/working_dir/src/include \
+    #/Users/mercury/chromium/working_dir/src/include/libyuv
 
 #For now, MARIN looks for libraries in the lib folder. It is the user's responsability to compile necessary libraries and place them in proper locations.
 #Should be present: libyuv, openigtlink and openh264 (sub-components: welsdec welsenc, processing, common)
@@ -148,3 +159,8 @@ else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/lib/openIGT
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/lib/openIGTLink/release/OpenIGTLink.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/lib/openIGTLink/debug/OpenIGTLink.lib
 else:unix: PRE_TARGETDEPS += $$PWD/lib/openIGTLink/libOpenIGTLink.a
+
+LIBS += -L$$PWD/lib/openh264/ -lopenh264
+INCLUDEPATH += $$PWD/lib/openh264
+DEPENDPATH += $$PWD/lib/openh264
+PRE_TARGETDEPS += $$PWD/lib/openh264/libopenh264.a

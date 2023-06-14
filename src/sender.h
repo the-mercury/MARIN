@@ -69,6 +69,7 @@ public:
     QObject * parent;
     bool send();
     bool connectVideo();
+    bool connectImage();
     bool connectCommands();
     void closeSocket();
     void toggleAnatomy( int i, bool b );
@@ -102,9 +103,19 @@ public:
         m_sendingVideo = b;
         emit sendingVideoStatusChanged();
     }
+    
+    bool sendingImage(){ return m_sendingImage; }
+    void setSendingImage( const bool b ){
+        if( b == m_sendingImage ){
+            return;
+        }
+        m_sendingImage = b;
+        emit sendingImageStatusChanged();
+    }
 
 signals:
     void sendingVideoStatusChanged();
+    void sendingImageStatusChanged();
     void serverAddressChanged();
 
 public slots:
@@ -134,9 +145,11 @@ private:
     bool newCommand = false;
     std::queue<Command> commands;
     bool m_sendingVideo;
+    bool m_sendingImage;
     bool m_send_full_res_picture = false;
     
     ushort port_video = VIDEO_SENDER_PORT;
+    ushort port_image = IMAGE_SENDER_PORT;
     ushort port_commands = COMMANDS_SENDER_PORT;
 
     int version = 2;
@@ -154,7 +167,9 @@ private:
     frame slot1;
     frame slot2;
     bool init_done = false;
+    bool isImage = true;
     bool connected_video = false;
+    bool connected_image = false;
     bool connected_commands = false;
     bool connected_images = false;
 
@@ -172,6 +187,9 @@ private:
     //socket to send video on:
     igtl::UDPServerSocket::Pointer udpVideoServerSocket = igtl::UDPServerSocket::New();
     igtl::MessageRTPWrapper::Pointer rtpWrapper = igtl::MessageRTPWrapper::New();
+    //socket to send image on:
+    igtl::ClientSocket::Pointer imageSocket = igtl::ClientSocket::New();
+    igtl::ServerSocket::Pointer tcpImageServerSocket = igtl::ServerSocket::New();
     
     igtl::MultiThreader::Pointer threader = igtl::MultiThreader::New();
     igtl::MutexLock::Pointer glock = igtl::MutexLock::New();

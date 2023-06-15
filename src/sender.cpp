@@ -7,7 +7,7 @@ Sender::Sender( QObject *parent, int w, int h, QString thisaddress, int frw, int
     setSendingVideo( INITIALLY_SENDING_VIDEO );
     setSendingImage( INITIALLY_SENDING_IMAGE );
     setServerAddress( SERVER_ADDRESS );
-    qInfo() << "[Sender] Will send video to " << hostname;
+    qInfo() << "[Sender] Will send image/video to " << hostname;
     width = w;
     height = h;
     full_res_width = frw;
@@ -20,7 +20,7 @@ Sender::Sender( QObject *parent, int w, int h, QString thisaddress, int frw, int
     this->thisaddress = thisaddress;
     udpVideoServerSocket->SetIPAddress( thisaddress.toStdString().c_str() );
     udpVideoServerSocket->SetPortNumber( port_video );
-    imageSocket->ConnectToServer(thisaddress.toStdString().c_str(), port_image);
+//    imageSocket->ConnectToServer(thisaddress.toStdString().c_str(), port_image);
     udpCommandsServerSocket->SetIPAddress( thisaddress.toStdString().c_str() );
     udpCommandsServerSocket->SetPortNumber( port_commands );
 //    h264StreamEncoder = new H264Encoder( OH264_CONFIG_FILE_PATH );
@@ -327,10 +327,16 @@ bool Sender::connectImage(){
             connected_image = false;
         } else {
             std::cout << "[Sender] Created a server socket. (TCP for image)" << std::endl;
-            imageSocket = tcpImageServerSocket->WaitForConnection(10000);
-            // TODO: check if connection is successful
-            connected_image = true;
-//            imageSocket->SetTimout(3000);
+            int r = imageSocket->ConnectToServer(thisaddress.toStdString().c_str(), port_image);
+            if (r != 0){
+               std::cerr << "[Sender] Cannot connect to the image server." << std::endl;
+               exit(0);
+            } else {
+                std::cerr << "[Sender] Connected to the image server sucessfully." << std::endl;
+                imageSocket = tcpImageServerSocket->WaitForConnection(10000);
+                connected_image = true;
+//                imageSocket->SetTimout(3000);
+            }
         }
     } else {
         qWarning() << "[Sender] Already connected to send image. Nothing to do.";

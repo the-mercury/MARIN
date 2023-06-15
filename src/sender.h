@@ -145,7 +145,7 @@ private:
     bool newCommand = false;
     std::queue<Command> commands;
     bool m_sendingVideo;
-    bool m_sendingImage;
+    bool m_sendingImage = true;
     bool m_send_full_res_picture = false;
     
     ushort port_video = VIDEO_SENDER_PORT;
@@ -171,7 +171,6 @@ private:
     bool connected_video = false;
     bool connected_image = false;
     bool connected_commands = false;
-    bool connected_images = false;
 
     H264Encoder::Pointer h264StreamEncoder;
     GenericEncoder::Pointer encoder;
@@ -188,8 +187,8 @@ private:
     igtl::UDPServerSocket::Pointer udpVideoServerSocket = igtl::UDPServerSocket::New();
     igtl::MessageRTPWrapper::Pointer rtpWrapper = igtl::MessageRTPWrapper::New();
     //socket to send image on:
-    igtl::ClientSocket::Pointer imageSocket = igtl::ClientSocket::New();
     igtl::ServerSocket::Pointer tcpImageServerSocket = igtl::ServerSocket::New();
+    igtl::ClientSocket::Pointer imageSocket = igtl::ClientSocket::New();
     
     igtl::MultiThreader::Pointer threader = igtl::MultiThreader::New();
     igtl::MutexLock::Pointer glock = igtl::MutexLock::New();

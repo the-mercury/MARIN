@@ -8,8 +8,8 @@
 //Define image capture size:
 //(it has to be supported by the camera of the device)
 //1920, 1080
-#define CAMERA_WIDTH 1920
-#define CAMERA_HEIGHT 1080
+#define CAMERA_WIDTH 1024
+#define CAMERA_HEIGHT 768
 //Define camera capture format:
 //(it needs to be supported by the camera of the device)
 #define CAMERA_FORMAT QVideoFrame::Format_Invalid
@@ -44,10 +44,10 @@
 #define THIS_DEVICE_NAME "MARIN"
 
 //These parameters should be defined by user to reflect the network setup:
-#define SERVER_ADDRESS "192.168.3.3"                           //Address of machine on which the neuronav platform runs
-#define VIDEO_SENDER_PORT 18951                                 //UDP port to send video to
-#define IMAGE_SENDER_PORT 18952                                 //TCP port to send image to
-
+#define SERVER_ADDRESS "192.168.3.7"                           //Address of machine on which the neuronav platform runs
+enum VideoModes { VIDEOMODE_UNDEFINED, H264, I420, Image };
+#define VIDEO_MODE VideoModes::Image
+#define VIDEO_SENDER_PORT 18951                                 //port to send video to
 #define COMMANDS_SENDER_PORT 18947                              //UDP port to send commands to
 #define VIDEO_RECEIVER_PORT 18946                               //UDP port to receive video from
 #define COMMANDS_RECEIVER_PORT 18949                            //TCP port to receive commands/status updates from
@@ -66,7 +66,7 @@
 //        (this part wouldn't typically need to be changed)
 
 //Commands structure definition:
-enum CommandName { UNDEFINED, ToggleAnatomy, ToggleQuadView, NavigateSlice, ReregisterAR, RotateView, FreezeFrame, ResetReregistration, ArbitraryCommand };
+enum CommandName { COMMAND_UNDEFINED, ToggleAnatomy, ToggleQuadView, NavigateSlice, ReregisterAR, RotateView, FreezeFrame, ResetReregistration, ArbitraryCommand };
 struct Command {    CommandName c ;
                     double param1;
                     double param2;

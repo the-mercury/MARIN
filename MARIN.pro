@@ -42,27 +42,16 @@ QMAKE_BUNDLE_DATA += deployment
 QMAKE_INFO_PLIST = Info.plist
 
 INCLUDEPATH += \
-    /Volumes/mercury+/OpenIGTLink/OpenIGTLink/Source \
-    /Volumes/mercury+/OpenIGTLink/OpenIGTLink/Source/VideoStreaming \
-    /Volumes/mercury+/OpenIGTLink/OpenIGTLink/Source/igtlutil \
-    /Volumes/mercury+/OpenIGTLink/OpenIGTLink_build \
-    /Volumes/mercury+/OpenIGTLink/OpenIGTLink_build/lib/Debug \
-    /Volumes/mercury+/OpenH264/openh264 \
-    /Volumes/mercury+/OpenH264/openh264/codec \
-    /Volumes/mercury+/OpenH264/openh264/codec/api/wels \
-    /Volumes/mercury+/chromium/working_dir/src/include \
-    /Volumes/mercury+/chromium/working_dir/src/include/libyuv
-
-    #/Users/mercury/OpenIGTLink/OpenIGTLink/Source \
-    #/Users/mercury/OpenIGTLink/OpenIGTLink/Source/VideoStreaming \
-    #/Users/mercury/OpenIGTLink/OpenIGTLink/Source/igtlutil \
-    #/Users/mercury/OpenIGTLink/OpenIGTLink_build \
-    #/Users/mercury/OpenIGTLink/OpenIGTLink_build/lib/Debug \
-    #/Users/mercury/OpenH264/openh264 \
-    #/Users/mercury/OpenH264/openh264/codec \
-    #/Users/mercury/OpenH264/openh264/codec/api/wels \
-    #/Users/mercury/chromium/working_dir/src/include \
-    #/Users/mercury/chromium/working_dir/src/include/libyuv
+    /Users/el/git/OpenIGTLink/Source \
+    /Users/el/git/OpenIGTLink/Source/VideoStreaming \
+    /Users/el/git/OpenIGTLink/Source/igtlutil \
+    /Users/el/git/build_oigtl_ios \
+    /Users/el/git/build_oigtl_ios/lib/Debug \
+    /Users/el/git/build_oigtl_ios/Deps/openh264 \
+    /Users/el/git/build_oigtl_ios/Deps/openh264/codec \
+    /Users/el/git/build_oigtl_ios/Deps/openh264/codec/api/wels \
+    includes/libyuv \
+    includes/libyuv/libyuv
 
 #For now, MARIN looks for libraries in the lib folder. It is the user's responsability to compile necessary libraries and place them in proper locations.
 #Should be present: libyuv, openigtlink and openh264 (sub-components: welsdec welsenc, processing, common)

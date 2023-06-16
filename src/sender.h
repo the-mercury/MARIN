@@ -46,6 +46,8 @@
 #include "igtl_util.h"
 #include "igtlH264Encoder.h"
 #include "igtlH264Decoder.h"
+#include "igtlI420Encoder.h"
+#include "igtlI420Decoder.h"
 
 #include <configs/constants.h>
 
@@ -149,7 +151,6 @@ private:
     bool m_send_full_res_picture = false;
     
     ushort port_video = VIDEO_SENDER_PORT;
-    ushort port_image = IMAGE_SENDER_PORT;
     ushort port_commands = COMMANDS_SENDER_PORT;
 
     int version = 2;
@@ -169,10 +170,11 @@ private:
     bool init_done = false;
     bool isImage = true;
     bool connected_video = false;
-    bool connected_image = false;
     bool connected_commands = false;
+    int msgID = 0;
 
     H264Encoder::Pointer h264StreamEncoder;
+    I420Encoder::Pointer I420StreamEncoder;
     GenericEncoder::Pointer encoder;
     SourcePicture* srcPic = new SourcePicture();
     
